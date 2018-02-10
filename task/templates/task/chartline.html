@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+{% load static %}
+<html>
+<head>
+     <script src="{% static 'jquery-3.2.1.min.js' %}"></script>
+ <script>
+
+function timedRefresh(timeoutPeriod) {
+	setTimeout("location.reload(true);",timeoutPeriod);
+}
+
+window.onload = timedRefresh(300000);
+
+</script>
+
+<script>
+window.onload = function () {
+
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	exportEnabled: true,
+    "marginRight": 40,
+    "marginLeft": 40,
+    "autoMarginOffset": 20,
+    "mouseWheelZoomEnabled":true,
+	theme: "light2",
+	title:{
+		text: "memory Line Chart"
+	},
+		axisX: {
+		title: "datetime",
+		titleFontColor: "#FF0000",
+	},
+	axisY:{
+	    title: "used-memory -KB",
+	    titleFontColor: "#FF0000",
+	    lineColor: "#4F81BC",
+	    tickColor: "#4F81BC",
+		includeZero: false
+	},
+	data: [{
+		type: "line",
+		dataPoints: [
+		{%for i in ret%}
+
+			{ y: {{i.used}} },
+		{%endfor%}
+		]
+	},
+	]
+
+});
+
+chart.render();
+
+}
+chart.addListener("rendered", zoomChart);
+
+zoomChart();
+
+function zoomChart() {
+    chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
+}
+</script>
+</head>
+<body>
+
+<h1>used</h1>
+<hr>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+</html>
